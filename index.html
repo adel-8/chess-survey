@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Survey · Custom Select</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+
+        form {
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
+            padding: 2rem 2.5rem;
+            width: 100%;
+            max-width: 550px;
+            border: 1px solid #eaeef2;
+        }
+
+        h3 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1e2b3a;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.5px;
+            border-left: 6px solid #3c6e71;
+            padding-left: 1rem;
+        }
+
+        label {
+            font-weight: 500;
+            color: #2c3e50;
+            display: block;
+            margin: 1.2rem 0 0.4rem;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: #f9fafc;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
+            border-color: #3c6e71;
+            background: #ffffff;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(60, 110, 113, 0.15);
+        }
+
+        /* Radio group */
+        .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin: 0.5rem 0 1rem;
+            background: #f9fafc;
+            padding: 0.8rem 1.2rem;
+            border-radius: 40px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .radio-option input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #b0c4d9;
+            border-radius: 50%;
+            margin: 0;
+            transition: 0.1s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .radio-option input[type="radio"]:checked {
+            border-color: #3c6e71;
+            background: #3c6e71;
+            box-shadow: inset 0 0 0 4px white;
+        }
+
+        .radio-option input[type="radio"]:focus {
+            outline: 2px solid #3c6e71;
+            outline-offset: 2px;
+        }
+
+        .radio-option label {
+            margin: 0;
+            font-weight: 500;
+            color: #1e2b3a;
+            text-transform: none;
+            letter-spacing: normal;
+            cursor: pointer;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        /* Custom dropdown */
+        .custom-select {
+            position: relative;
+            width: 100%;
+            margin: 0.5rem 0 1rem;
+        }
+
+        .select-selected {
+            background: #f9fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 0.8rem 1rem;
+            font-size: 1rem;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s;
+        }
+
+        .select-selected:after {
+            content: '';
+            width: 0.8rem;
+            height: 0.8rem;
+            border-right: 2px solid #3c6e71;
+            border-bottom: 2px solid #3c6e71;
+            transform: rotate(45deg);
+            transition: transform 0.2s;
+            margin-left: 0.5rem;
+        }
+
+        .select-selected.select-arrow-active:after {
+            transform: rotate(-135deg);
+        }
+
+        .select-selected:hover,
+        .select-selected:focus {
+            border-color: #3c6e71;
+            background: #ffffff;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(60, 110, 113, 0.15);
+        }
+
+        .select-items {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            margin-top: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            display: none; /* hidden by default */
+        }
+
+        .select-items div {
+            padding: 0.8rem 1rem;
+            cursor: pointer;
+            transition: background 0.1s;
+            color: #1e2b3a;
+        }
+
+        .select-items div:hover,
+        .select-items div.same-as-selected {
+            background: #3c6e71;
+            color: white;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1.2rem;
+            margin-top: 2.2rem;
+        }
+
+        button {
+            flex: 1;
+            background: #1e2b3a;
+            color: white;
+            border: none;
+            padding: 0.9rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 2px solid transparent;
+        }
+
+        button[type="submit"] {
+            background: #3c6e71;
+        }
+
+        button[type="reset"] {
+            background: #ffffff;
+            color: #1e2b3a;
+            border: 2px solid #dde7ed;
+        }
+
+        button[type="submit"]:hover {
+            background: #2c5a5d;
+            transform: scale(1.02);
+        }
+
+        button[type="reset"]:hover {
+            background: #f2f6f9;
+            border-color: #b0c4d9;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        #form-message {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+            min-height: 2rem;
+        }
+
+        .success {
+            color: #2b7a4b;
+        }
+
+        .error {
+            color: #b13e3e;
+        }
+
+        /* subtle chessboard background on focus */
+        input:focus, textarea:focus {
+            background-image: radial-gradient(circle at 10px 10px, rgba(60,110,113,0.03) 2px, transparent 2px);
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <form id="survey-form">
+        <h3>♜ Chess Survey</h3>
+
+        <label for="name">Your name</label>
+        <input type="text" name="name" id="name" placeholder="e.g. Magnus Carlsen" required>
+
+        <label for="age">Age</label>
+        <input type="number" name="age" id="age" required min="1" max="120" placeholder="25">
+
+        <label>Do you play chess?</label>
+        <div class="radio-group">
+            <div class="radio-option">
+                <input type="radio" name="chess" id="chess-no" value="no" required>
+                <label for="chess-no">No</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" name="chess" id="chess-yes" value="yes">
+                <label for="chess-yes">Yes</label>
+            </div>
+        </div>
+
+        <label for="matches">Matches per day</label>
+        <input type="number" name="matches" id="matches" min="0" placeholder="3">
+
+        <label for="type">Preferred time control</label>
+        <!-- Hidden input to store the select value for form submission -->
+        <input type="hidden" name="type" id="type-hidden" value="Rapid">
+        <!-- Custom dropdown container -->
+        <div class="custom-select" id="custom-select">
+            <div class="select-selected" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">Rapid</div>
+            <div class="select-items" role="listbox">
+                <div data-value="Rapid" class="same-as-selected">Rapid</div>
+                <div data-value="Bullet">Bullet</div>
+                <div data-value="Blitz">Blitz</div>
+            </div>
+        </div>
+
+        <label for="message">Why do you love chess?</label>
+        <textarea name="message" id="message" placeholder="It's the game of kings..."></textarea>
+
+        <div class="button-group">
+            <button type="submit">Submit</button>
+            <button type="reset">Reset</button>
+        </div>
+        <div id="form-message"></div>
+    </form>
+
+    <script>
+        (function() {
+            // ----- CUSTOM SELECT LOGIC -----
+            const customSelect = document.getElementById('custom-select');
+            const selectedDiv = customSelect.querySelector('.select-selected');
+            const itemsDiv = customSelect.querySelector('.select-items');
+            const options = itemsDiv.querySelectorAll('div[data-value]');
+            const hiddenInput = document.getElementById('type-hidden');
+
+            // Toggle dropdown on click
+            selectedDiv.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeAllSelect(this);
+                const isActive = itemsDiv.style.display === 'block';
+                itemsDiv.style.display = isActive ? 'none' : 'block';
+                selectedDiv.classList.toggle('select-arrow-active', !isActive);
+                selectedDiv.setAttribute('aria-expanded', !isActive);
+            });
+
+            // Handle option selection
+            options.forEach(opt => {
+                opt.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const value = this.getAttribute('data-value');
+                    const text = this.textContent;
+                    selectedDiv.textContent = text;
+                    hiddenInput.value = value;
+                    // Remove selected class from all, add to this
+                    options.forEach(o => o.classList.remove('same-as-selected'));
+                    this.classList.add('same-as-selected');
+                    // Close dropdown
+                    itemsDiv.style.display = 'none';
+                    selectedDiv.classList.remove('select-arrow-active');
+                    selectedDiv.setAttribute('aria-expanded', 'false');
+                });
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function() {
+                itemsDiv.style.display = 'none';
+                selectedDiv.classList.remove('select-arrow-active');
+                selectedDiv.setAttribute('aria-expanded', 'false');
+            });
+
+            // Prevent closing when clicking inside the dropdown
+            itemsDiv.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            // Helper to close all other custom selects (if multiple)
+            function closeAllSelect(except) {
+                const selects = document.querySelectorAll('.custom-select');
+                selects.forEach(select => {
+                    if (select !== except?.closest('.custom-select')) {
+                        const items = select.querySelector('.select-items');
+                        const sel = select.querySelector('.select-selected');
+                        if (items) items.style.display = 'none';
+                        if (sel) sel.classList.remove('select-arrow-active');
+                    }
+                });
+            }
+
+            // Initialize selected class (first option is default)
+            options[0].classList.add('same-as-selected');
+
+            // Handle form reset: restore default selected value
+            const form = document.getElementById('survey-form');
+            form.addEventListener('reset', function() {
+                // Reset custom select to first option
+                setTimeout(() => {
+                    const firstOpt = options[0];
+                    const value = firstOpt.getAttribute('data-value');
+                    const text = firstOpt.textContent;
+                    selectedDiv.textContent = text;
+                    hiddenInput.value = value;
+                    options.forEach(o => o.classList.remove('same-as-selected'));
+                    firstOpt.classList.add('same-as-selected');
+                }, 0); // setTimeout to let native reset happen first
+            });
+
+            // ----- FORM SUBMISSION TO GOOGLE SHEETS (unchanged) -----
+            const messageDiv = document.getElementById('form-message');
+
+            // ⚡ REPLACE WITH YOUR GOOGLE APPS SCRIPT URL
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbySU9ZjDFfudjUkHi6TKXdD5PMnjYMeWYyetyd9aC0wsNL_iWOOLLZMc7C-7axwYPl0Iw/exec';
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                messageDiv.textContent = 'Sending...';
+                messageDiv.className = '';
+
+                const formData = new FormData(form);
+                const data = {};
+                formData.forEach((value, key) => { data[key] = value; });
+
+                fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Network error');
+                    return response.json();
+                })
+                .then(result => {
+                    messageDiv.textContent = '✓ Thank you! Your response has been recorded.';
+                    messageDiv.className = 'success';
+                    form.reset(); // this triggers the reset event above
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    messageDiv.textContent = '✗ Something went wrong. Please try again.';
+                    messageDiv.className = 'error';
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
