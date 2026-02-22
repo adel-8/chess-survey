@@ -296,6 +296,33 @@
         <label for="matches">Matches per day</label>
         <input type="number" name="matches" id="matches" min="0" placeholder="3">
 
+        <label>have you ever participated in a champion?</label>
+        <div class="radio-group">
+            <div class="radio-option">
+                <input type="radio" name="chess-ch" id="chess-no" value="no" required>
+                <label for="chess-no">No</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" name="chess-ch" id="chess-yes" value="yes">
+                <label for="chess-yes">Yes</label>
+            </div>
+        </div>
+
+        <label>what is your fav color?</label>
+        <div class="radio-group">
+            <div class="radio-option">
+                <input type="radio" name="color" id="color-black" value="black" required>
+                <label for="color-black">black</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" name="color" id="color-white" value="white">
+                <label for="color-white">white</label>
+            </div>
+        </div>
+
+        <label for="matches">what is your elo</label>
+        <input type="number" name="matches" id="matches" min="100" placeholder="500">
+
         <label for="type">Preferred time control</label>
         <!-- Hidden input to store the select value for form submission -->
         <input type="hidden" name="type" id="type-hidden" value="Rapid">
@@ -438,4 +465,5 @@
         })();
     </script>
 </body>
+
 </html>
