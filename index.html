@@ -284,29 +284,28 @@
         <label>Do you play chess?</label>
         <div class="radio-group">
             <div class="radio-option">
-                <input type="radio" name="chess" id="chess-no" value="no" required>
-                <label for="chess-no">No</label>
+                <input type="radio" name="chess" id="chess-play-no" value="no" required>
+                <label for="chess-play-no">No</label>
             </div>
             <div class="radio-option">
-                <input type="radio" name="chess" id="chess-yes" value="yes">
-                <label for="chess-yes">Yes</label>
+                <input type="radio" name="chess" id="chess-play-yes" value="yes">
+                <label for="chess-play-yes">Yes</label>
             </div>
         </div>
 
-
-        <label>have you ever participated in a champion?</label>
+        <label>Have you ever participated in a championship?</label>
         <div class="radio-group">
             <div class="radio-option">
-                <input type="radio" name="chess-ch" id="chess-no" value="no" required>
-                <label for="chess-no">No</label>
+                <input type="radio" name="chess-ch" id="chess-ch-no" value="no" required>
+                <label for="chess-ch-no">No</label>
             </div>
             <div class="radio-option">
-                <input type="radio" name="chess-ch" id="chess-yes" value="yes">
-                <label for="chess-yes">Yes</label>
+                <input type="radio" name="chess-ch" id="chess-ch-yes" value="yes">
+                <label for="chess-ch-yes">Yes</label>
             </div>
         </div>
 
-        <label>what is your fav color?</label>
+        <label>What is your favorite color?</label>
         <div class="radio-group">
             <div class="radio-option">
                 <input type="radio" name="color" id="color-black" value="black" required>
@@ -321,8 +320,8 @@
         <label for="matches">Matches per day</label>
         <input type="number" name="matches" id="matches" min="0" placeholder="3">
 
-        <label for="matches">what is your elo</label>
-        <input type="number" name="matches" id="matches" min="100" placeholder="500">
+        <label for="elo">What is your Elo?</label>
+        <input type="number" name="elo" id="elo" min="100" placeholder="500">
 
         <label for="type">Preferred time control</label>
         <!-- Hidden input to store the select value for form submission -->
@@ -427,7 +426,7 @@
                 }, 0); // setTimeout to let native reset happen first
             });
 
-            // ----- FORM SUBMISSION TO GOOGLE SHEETS (unchanged) -----
+            // ----- FORM SUBMISSION TO GOOGLE SHEETS -----
             const messageDiv = document.getElementById('form-message');
 
             // ⚡ REPLACE WITH YOUR GOOGLE APPS SCRIPT URL
@@ -466,6 +465,4 @@
         })();
     </script>
 </body>
-
 </html>
-
